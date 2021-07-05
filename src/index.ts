@@ -6,6 +6,7 @@ import combinedSourceValueFilter from './reporting/utils/helper/combinedSourceVa
 import combineSources from './reporting/utils/helper/combineSources';
 import filterSourcesValues from './reporting/utils/helper/filterSourcesValues';
 import pipeFromConfig from './reporting/utils/helper/pipeFromConfig';
+export * from './reporting/interfaces';
 
 export const REPORTING_SOURCES: Array<{
   key: string;
@@ -153,7 +154,7 @@ class ClientSideReporting<T extends Record<string, unknown>> {
           );
           return {
             label: config.label,
-            result: combinedChartData,
+            results: combinedChartData,
           };
         }
       }
