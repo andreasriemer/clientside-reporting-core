@@ -5,15 +5,31 @@ const valueByPath = <T extends Record<string, any> | unknown, R extends any>(
   path: Array<string>,
 ): R | Array<R> => {
   return path.reduce((previous: any, current, currentIndex, array) => {
-    if (previous == null || (typeof previous === 'object' && Array.isArray(previous))) {
+    if (previous == null) {
       return previous;
     }
     if (previous[current] != null && typeof previous[current] === 'object' && Array.isArray(previous[current])) {
       const remainingPath = [...array].splice(currentIndex + 1);
       return previous[current].reduce((previousListValues: Array<any>, currentListValue: any) => {
         const result = valueByPath(currentListValue, remainingPath);
-        if (result != null) {
-          previousListValues.push(result);
+        const resultList = Array.isArray(result) ? result : [result];
+        if (resultList.length) {
+          previousListValues.push(...resultList.filter((e) => e != null));
+        }
+        return previousListValues;
+      }, []);
+    }
+    if (typeof previous === 'object' && Array.isArray(previous)) {
+      const remainingPath = [...array].splice(currentIndex);
+      return previous.reduce((previousListValues, currentListValue) => {
+        if (typeof currentListValue !== 'object') {
+          previousListValues.push(currentListValue);
+          return previousListValues;
+        }
+        const result = valueByPath(currentListValue, remainingPath);
+        const resultList = Array.isArray(result) ? result : [result];
+        if (resultList.length) {
+          previousListValues.push(...resultList.filter((e) => e != null));
         }
         return previousListValues;
       }, []);

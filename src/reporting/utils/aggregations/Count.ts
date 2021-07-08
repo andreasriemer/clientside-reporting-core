@@ -11,12 +11,19 @@ const countAggregation =
       source,
       result: {
         label,
-        value: [...source].filter((v, _, array) => {
-          if (isDuplicateValue(v, array, paths[0])) {
-            return false;
+        value: [...source].reduce((previous: number, current: T | SimpleResult<T>, _, array) => {
+          if (isDuplicateValue(current, array, paths[0])) {
+            return previous;
           }
-          return valueByPath(v, paths[0]) != null;
-        }).length,
+          const valueFromPath = valueByPath(current, paths[0]);
+          const values = Array.isArray(valueFromPath) ? valueFromPath : [valueFromPath];
+          values.forEach((value) => {
+            if (value != null) {
+              previous += 1;
+            }
+          });
+          return previous;
+        }, 0),
       },
     };
     return result;
