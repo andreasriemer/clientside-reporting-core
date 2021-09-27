@@ -37,36 +37,37 @@ export const loadSourceValues = async <T extends Record<string, unknown>>(
         key: string;
         label: string;
         values: Array<T>;
-      }> = sourceData.reduce(
-        (
-          prev: Array<{
-            key: string;
-            label: string;
-            values: Array<T>;
-          }>,
-          curr:
-            | {
-                key: string;
-                label: string;
-                values: Array<T> | undefined;
-              }
-            | undefined,
-        ) => {
-          if (curr?.values?.length) {
-            prev.push({
-              ...curr,
-              values: curr.values.filter((entry) => !!entry),
-            });
-          }
-          return prev;
-        },
-        [],
-      );
+      }> = [];
+      for (const data of sourceData) {
+        if (data?.values?.length) {
+          ensuredValues.push({
+            key: data.key,
+            label: data.label,
+            values: data.values.filter((entry) => !!entry),
+          });
+        }
+      }
       if (config.sources?.length) {
-        return combinedSourceValueFilter<T>(
-          combineSources<T>(filterSourcesValues(ensuredValues, config.sourcesFilter), config),
-          config.sourcesFilter,
-        );
+        const workerPool = pool('./worker/reporting-worker.js', { maxWorkers: 3 });
+        try {
+          const filteredSourcesValues = await workerPool.exec('filterSourcesValues', [
+            ensuredValues,
+            config.sourcesFilter,
+          ]);
+          const combinedSources = await workerPool.exec('combineSources', [filteredSourcesValues, config]);
+          return await workerPool.exec('combinedSourceValueFilter', [combinedSources, config.sourcesFilter]);
+          return combinedSourceValueFilter<T>(
+            combineSources<T>(filterSourcesValues(ensuredValues, config.sourcesFilter), config),
+            config.sourcesFilter,
+          );
+        } catch (_) {
+          return combinedSourceValueFilter<T>(
+            combineSources<T>(filterSourcesValues(ensuredValues, config.sourcesFilter), config),
+            config.sourcesFilter,
+          );
+        } finally {
+          workerPool.terminate();
+        }
       }
     }
   }

@@ -5,5 +5,8 @@ workerpool.worker({
   getReport,
   generateReport,
   aggregationPipe,
-  pipeFromConfig
+  pipeFromConfig,
+  filterSourcesValues,
+  combineSources,
+  combinedSourceValueFilter,
 });

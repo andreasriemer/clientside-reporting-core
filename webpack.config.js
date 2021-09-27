@@ -10,9 +10,10 @@ module.exports = {
             type: "umd"
         },
     },
-    optimization: {
+    optimization: { 
         minimize: true,
     },
+    target: 'web',
     mode: 'production',
     plugins: [
         new CopyPlugin({
