@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { AggregationPipeEntry } from '../../interfaces/AggregationPipeEntry';
-import { ListResult } from '../../interfaces/Result';
+import { ListResult } from '../../interfaces/Results';
 import { TransformationActionType } from '../../types/TransformationActionType';
 import filterValues from '../pipes/FilterValues';
 import groupBy from '../pipes/GroupBy';

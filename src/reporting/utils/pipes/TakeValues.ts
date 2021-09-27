@@ -1,5 +1,5 @@
 import { AggregationPipeEntry } from '../../interfaces/AggregationPipeEntry';
-import { ListResult } from '../../interfaces/Result';
+import { ListResult } from '../../interfaces/Results';
 
 const takeValues =
   <T, V extends T>(): AggregationPipeEntry<T, V, ListResult<V>> =>

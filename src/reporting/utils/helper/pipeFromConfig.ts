@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Aggregation } from '../../interfaces/Aggregation';
+import { AggregationAction } from '../../interfaces/Aggregation';
 import { ReportPipeConfig } from '../../interfaces/ReportConfig';
 import { ReportingPipe, ReportingPipeEntry } from '../../interfaces/ReportingPipe';
-import { SimpleResult } from '../../interfaces/Result';
+import { SimpleResult } from '../../interfaces/Results';
 import aggregationFromType from './aggregationFromType';
 import transformationActionFromType from './transformationActionFromType';
 
@@ -13,7 +13,7 @@ const pipeFromConfig = <T>(config: ReportPipeConfig): ReportingPipe<T> | undefin
       transformation?.action &&
       transformation.paths?.length &&
       aggregations?.length &&
-      aggregations.some(({ aggregation, paths }) => !!aggregation && paths?.length)
+      aggregations.some(({ action, paths }) => !!action && paths?.length)
     ) {
       entry = {
         transformation: {
@@ -23,11 +23,11 @@ const pipeFromConfig = <T>(config: ReportPipeConfig): ReportingPipe<T> | undefin
           additionalData: transformation.additionalData,
         },
         aggregations: aggregations.reduce(
-          (previousAggregation, { label, aggregation, paths, additionalData }) => {
-            if (aggregation && paths?.length) {
+          (previousAggregation, { label, action, paths, additionalData }) => {
+            if (action && paths?.length) {
               previousAggregation.push({
                 label,
-                aggregation: aggregationFromType(aggregation),
+                action: aggregationFromType(action),
                 paths,
                 additionalData,
               });
@@ -36,7 +36,7 @@ const pipeFromConfig = <T>(config: ReportPipeConfig): ReportingPipe<T> | undefin
           },
           [] as Array<{
             paths: Array<Array<string>>;
-            aggregation: Aggregation<T, any, SimpleResult<any>>;
+            action: AggregationAction<T, any, SimpleResult<any>>;
             label?: string;
             additionalData?: Record<string, unknown>;
           }>,
@@ -51,14 +51,14 @@ const pipeFromConfig = <T>(config: ReportPipeConfig): ReportingPipe<T> | undefin
           additionalData: transformation.additionalData,
         },
       };
-    } else if (aggregations?.length && aggregations.some(({ aggregation, paths }) => !!aggregation && paths?.length)) {
+    } else if (aggregations?.length && aggregations.some(({ action, paths }) => !!action && paths?.length)) {
       entry = {
         aggregations: aggregations.reduce(
-          (previousAggregation, { label, aggregation, paths, additionalData }) => {
-            if (aggregation && paths?.length) {
+          (previousAggregation, { label, action, paths, additionalData }) => {
+            if (action && paths?.length) {
               previousAggregation.push({
                 label,
-                aggregation: aggregationFromType(aggregation),
+                action: aggregationFromType(action),
                 paths,
                 additionalData,
               });
@@ -67,7 +67,7 @@ const pipeFromConfig = <T>(config: ReportPipeConfig): ReportingPipe<T> | undefin
           },
           [] as Array<{
             paths: Array<Array<string>>;
-            aggregation: Aggregation<T, any, SimpleResult<any>>;
+            action: AggregationAction<T, any, SimpleResult<any>>;
             label?: string;
             additionalData?: Record<string, unknown>;
           }>,

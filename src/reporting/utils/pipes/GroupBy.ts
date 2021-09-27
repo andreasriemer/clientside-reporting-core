@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { AggregationPipeEntry } from '../../interfaces/AggregationPipeEntry';
-import AggregationResult from '../../interfaces/AggregationResult';
 import { Aggregation } from '../../interfaces/Aggregation';
-import { ListResult, SimpleResult } from '../../interfaces/Result';
+import { ListResult, SimpleResult, AggregationResult } from '../../interfaces/Results';
 import filteredListResultEntry from '../helper/filteredListResultEntry';
 import valueByPath from '../helper/valueByPath';
 
@@ -12,12 +11,7 @@ const groupBy =
     source: Array<T> | ListResult<T>,
     paths: Array<Array<string>>,
     _?: Array<string>,
-    aggregations?: Array<{
-      paths: Array<Array<string>>;
-      aggregation: Aggregation<T, V, SimpleResult<V>>;
-      label?: string;
-      additionalData?: Record<string, unknown>;
-    }>,
+    aggregations?: Array<Aggregation<T, V>>,
   ) => {
     return {
       source,
@@ -42,8 +36,8 @@ const groupBy =
               return [
                 ...previousValue,
                 ...(aggregations?.map(
-                  ({ aggregation, paths: aggregationPaths, label: aggregationLabel, additionalData }) => {
-                    return aggregation(
+                  ({ action, paths: aggregationPaths, label: aggregationLabel, additionalData }) => {
+                    return action(
                       (source as Array<any>)
                         .filter((entry) => {
                           const valueFromPath = valueByPath<any, string>(entry, paths[0]);

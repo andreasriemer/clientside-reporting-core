@@ -1,8 +1,11 @@
-import ClientSideReporting, { REPORTING_SOURCES } from '../index';
+import { loadSourceValues, KNOWN_SOURCE_NAMES } from '../index';
 
 test('ClientSideReporting - init', () => {
-  new ClientSideReporting().init([
-    { key: 'test', label: 'Test Label', dataCallback: () => new Promise((res) => res([])) },
-  ]);
-  expect(REPORTING_SOURCES.length).toBe(1);
+  loadSourceValues<{ key: string }>(
+    [{ key: 'test', label: 'Test Label', dataCallback: () => new Promise((res) => res([{ key: 'string' }])) }],
+    {
+      sources: [{ name: 'test' }],
+    },
+  );
+  expect(KNOWN_SOURCE_NAMES.length).toBe(1);
 });

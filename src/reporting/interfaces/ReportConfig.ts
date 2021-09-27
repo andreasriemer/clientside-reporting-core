@@ -1,21 +1,13 @@
-import { AggregationType } from '../types/AggregationType';
+import { AggregationType } from '.';
+import { AggregationActionType } from '../types/AggregationActionType';
 import { TransformationActionType } from '../types/TransformationActionType';
+import { TransformationType } from './Transformation';
 
 export type ReportFilterComparators = 'lt' | 'lte' | 'eq' | 'gte' | 'gt';
 
 export type ReportPipeConfig = Array<{
-  transformation?: {
-    action?: TransformationActionType;
-    paths?: Array<Array<string>>;
-    filterValue?: Array<string>;
-    additionalData?: Record<string, unknown>;
-  };
-  aggregations?: Array<{
-    label?: string;
-    paths?: Array<Array<string>>;
-    aggregation?: AggregationType;
-    additionalData?: Record<string, unknown>;
-  }>;
+  transformation?: TransformationType;
+  aggregations?: Array<AggregationType>;
 }>;
 
 export interface ReportSourceFilter {

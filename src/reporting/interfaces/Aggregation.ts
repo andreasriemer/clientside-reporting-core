@@ -1,9 +1,23 @@
-import AggregationResult from './AggregationResult';
-import { ListResult, SimpleResult } from './Result';
+import { AggregationActionType } from './../types/AggregationActionType';
+import { ListResult, SimpleResult, AggregationResult } from './Results';
 
-export type Aggregation<T, V, R extends SimpleResult<V> | ListResult<V>> = (
+export type AggregationAction<T, V, R extends SimpleResult<V> | ListResult<V>> = (
   source: Array<T> | ListResult<T>,
   paths: Array<Array<string>>,
   label: string,
   additionalData?: Record<string, unknown>,
 ) => AggregationResult<T, V, R>;
+
+export type Aggregation<T, V> = {
+  paths: Array<Array<string>>;
+  action: AggregationAction<T, V, SimpleResult<V>>;
+  label?: string;
+  additionalData?: Record<string, unknown>;
+};
+
+export type AggregationType = {
+  label?: string;
+  paths?: Array<Array<string>>;
+  action?: AggregationActionType;
+  additionalData?: Record<string, unknown>;
+};

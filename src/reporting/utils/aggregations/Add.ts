@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Aggregation } from '../../interfaces/Aggregation';
-import { ListResult, SimpleResult } from '../../interfaces/Result';
+import { AggregationAction } from '../../interfaces/Aggregation';
+import { ListResult, SimpleResult } from '../../interfaces/Results';
 import valueByPath from '../helper/valueByPath';
 import isDuplicateValue from '../helper/isDuplicateValue';
 import addValues from '../helper/addValues';
 
 const addAggregation =
-  <T>(): Aggregation<T, Array<number> | number, SimpleResult<Array<number> | number>> =>
+  <T>(): AggregationAction<T, Array<number> | number, SimpleResult<Array<number> | number>> =>
   (source: Array<T> | ListResult<T>, paths: Array<Array<string>>, label: string) => {
     const result = [...source].reduce((previous: Array<number>, current, _, array) => {
       if (paths.every((path) => isDuplicateValue(current, array, path))) {

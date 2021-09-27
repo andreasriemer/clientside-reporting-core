@@ -1,7 +1,5 @@
-import { REPORTING_SOURCES } from '../../../index';
+import { KNOWN_SOURCE_NAMES } from '../../../index';
 import valueByPath from './valueByPath';
-
-const KNOWN_SOURCE_NAMES = REPORTING_SOURCES?.map(({ key }) => key) || [];
 
 const isDuplicateValue = <T>(value: T, list: Array<T>, path: Array<string>): boolean => {
   const index = list.indexOf(value);
