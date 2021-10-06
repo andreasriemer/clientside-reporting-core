@@ -1,5 +1,5 @@
-import { ReportSourceFilter } from '../../interfaces/ReportConfig';
-import filteredValues from './filteredValues';
+import { ReportSourceFilter } from '../interfaces/ReportConfig';
+import filteredValues from '../utils/helper/filteredValues';
 
 const combinedSourceValueFilter = <T extends Record<string, unknown>>(
   combinedSourceValues: Array<T>,

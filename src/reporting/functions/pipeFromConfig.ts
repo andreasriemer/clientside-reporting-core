@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { AggregationAction } from '../../interfaces/Aggregation';
-import { ReportPipeConfig } from '../../interfaces/ReportConfig';
-import { ReportingPipe, ReportingPipeEntry } from '../../interfaces/ReportingPipe';
-import { SimpleResult } from '../../interfaces/Results';
-import aggregationFromType from './aggregationFromType';
-import transformationActionFromType from './transformationActionFromType';
+import { AggregationAction } from '../interfaces/Aggregation';
+import { ReportPipeConfig } from '../interfaces/ReportConfig';
+import { ReportingPipe, ReportingPipeEntry } from '../interfaces/ReportingPipe';
+import { SimpleResult } from '../interfaces/Results';
+import aggregationFromType from '../utils/helper/aggregationFromType';
+import transformationActionFromType from '../utils/helper/transformationActionFromType';
 
 const pipeFromConfig = <T>(config: ReportPipeConfig): ReportingPipe<T> | undefined => {
   const result = config.reduce((previous, { transformation, aggregations }) => {

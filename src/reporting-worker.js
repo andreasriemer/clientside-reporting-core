@@ -1,12 +1,9 @@
-importScripts('./workerpool.min.js');
-importScripts('./clientside-reporting-core.min.js');
+importScripts('./workerpool.min.js', './clientside-reporting-core.full.min.js');
 
 workerpool.worker({
-  getReport,
-  generateReport,
-  aggregationPipe,
-  pipeFromConfig,
-  filterSourcesValues,
-  combineSources,
   combinedSourceValueFilter,
+  combineSources,
+  filterSourcesValues,
+  generateReport,
+  pipeFromConfig,
 });

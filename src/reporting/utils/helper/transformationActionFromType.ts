@@ -2,9 +2,9 @@
 import { AggregationPipeEntry } from '../../interfaces/AggregationPipeEntry';
 import { ListResult } from '../../interfaces/Results';
 import { TransformationActionType } from '../../types/TransformationActionType';
-import filterValues from '../pipes/FilterValues';
-import groupBy from '../pipes/GroupBy';
-import takeValues from '../pipes/TakeValues';
+import filterValues from '../pipes/filterValues';
+import groupBy from '../pipes/groupBy';
+import takeValues from '../pipes/takeValues';
 
 const transformationActionFromType = <T>(
   type: TransformationActionType,

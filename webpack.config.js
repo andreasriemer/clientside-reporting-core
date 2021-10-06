@@ -2,9 +2,18 @@ const path = require('path')
 const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
-    entry: './lib/index.js',
+    entry: {
+        index: './lib/reporting/functions/index.js',
+        combinedSourceValueFilter: './lib/reporting/functions/combinedSourceValueFilter.js',
+        combineSources: './lib/reporting/functions/combineSources.js',
+        filterSourcesValues: './lib/reporting/functions/filterSourcesValues.js',
+        generateReport: './lib/reporting/functions/generateReport.js',
+        pipeFromConfig: './lib/reporting/functions/pipeFromConfig.js',
+    },
     output: {
-        filename: 'clientside-reporting-core.min.js',
+        filename: (pathData) => {
+            return pathData.chunk.name === 'index' ? 'clientside-reporting-core.full.min.js' : 'functions/[name].min.js';
+        },
         path: path.resolve(__dirname, 'lib/worker'),
         library: {
             type: "umd"

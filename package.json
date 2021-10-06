@@ -1,6 +1,6 @@
 {
   "name": "clientside-reporting-core",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "A clientside implementation for reports",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -14,8 +14,7 @@
     "preversion": "npm run lint",
     "version": "npm run format && git add -A src",
     "postversion": "git push && git push --tags",
-    "link": "npm link",
-    "uglify": "uglifyjs -c -o lib/reporting-core.min.js  -- lib/**/*.js"
+    "link": "npm link"
   },
   "files": [
     "lib /**/*"
@@ -26,7 +25,7 @@
     "report tool"
   ],
   "author": "Andreas Riemer",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@types/jest": "^26.0.23",
     "@types/workerpool": "^6.1.0",

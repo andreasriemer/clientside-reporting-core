@@ -1,6 +1,6 @@
-import { ReportSourceFilter } from '../../interfaces/ReportConfig';
-import filteredListResultEntry from './filteredListResultEntry';
-import filteredValues from './filteredValues';
+import { ReportSourceFilter } from '../interfaces/ReportConfig';
+import filteredListResultEntry from '../utils/helper/filteredListResultEntry';
+import filteredValues from '../utils/helper/filteredValues';
 
 const filterSourcesValues = (
   sources: Array<{

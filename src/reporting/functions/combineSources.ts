@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ReportConfig } from '../../interfaces/ReportConfig';
-import isDuplicateValue from './isDuplicateValue';
-import valueByPath from './valueByPath';
+import { ReportConfig } from '../interfaces/ReportConfig';
+import isDuplicateValue from '../utils/helper/isDuplicateValue';
+import valueByPath from '../utils/helper/valueByPath';
 
 const combineSources = <T>(
   sourceValues: Array<{
