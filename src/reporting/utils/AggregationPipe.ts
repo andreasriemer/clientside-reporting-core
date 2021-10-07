@@ -1,17 +1,17 @@
-import { ReportingPipe } from '../interfaces/ReportingPipe';
+import { ReportingPipeAction } from '../interfaces/ReportingPipe';
 import { ListResult, SimpleResult, AggregationResult } from '../interfaces/Results';
 import isTypeOf from './helper/isTypeOf';
 
 const aggregationPipe = <T>(
   label: string,
   source: Array<T>,
-  pipe: ReportingPipe<T>,
+  actions: Array<ReportingPipeAction<T>>,
 ): {
   label: string;
   source: Array<T>;
   result: Array<AggregationResult<any, any, SimpleResult<any>>>;
 } => {
-  const x = pipe.reduce(
+  const x = actions.reduce(
     (previous: Array<T> | AggregationResult<T, any, ListResult<any>>, { transformation, aggregations }) => {
       if (transformation) {
         const { action, paths, filterValue } = transformation;

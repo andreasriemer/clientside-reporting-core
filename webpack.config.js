@@ -27,7 +27,7 @@ module.exports = {
     plugins: [
         new CopyPlugin({
         patterns: [
-            { from: path.resolve(__dirname, 'src/reporting-worker.js'), to: path.resolve(__dirname, 'lib/worker') },
+            { from: path.resolve(__dirname, 'src/clientside-reporting-core.worker.js'), to: path.resolve(__dirname, 'lib/worker') },
             { from: path.resolve(__dirname, 'node_modules/workerpool/dist/workerpool.min.js'), to: path.resolve(__dirname, 'lib/worker') },
         ],
         }),

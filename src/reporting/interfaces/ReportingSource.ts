@@ -1,5 +1,5 @@
-export interface ReportingSource<T extends Record<string, unknown> = Record<string, unknown>> {
+export interface ReportingSource<T extends Record<string, unknown>> {
   key: string;
   label: string;
-  dataCallback: () => Promise<Array<T> | undefined> | undefined;
+  dataCallback: (variables?: Record<string, unknown>) => Promise<Array<T> | undefined> | undefined;
 }

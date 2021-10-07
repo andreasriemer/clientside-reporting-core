@@ -13,7 +13,7 @@ const groupBy =
     _?: Array<string>,
     aggregations?: Array<Aggregation<T, V>>,
   ) => {
-    return {
+    const result = {
       source,
       result: (source as Array<any>).reduce(
         (previous: Array<AggregationResult<T, V, SimpleResult<V>>>, current: T | SimpleResult<T>) => {
@@ -58,6 +58,7 @@ const groupBy =
         [],
       ),
     };
+    return result;
   };
 
 export default groupBy;

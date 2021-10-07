@@ -2,9 +2,13 @@
 import { Aggregation } from './Aggregation';
 import { Transformation } from './Transformation';
 
-export interface ReportingPipeEntry<T> {
+export type ReportingPipeAction<T> = {
   transformation?: Transformation<T>;
   aggregations?: Array<Aggregation<T, any>>;
-}
+};
 
-export type ReportingPipe<T> = Array<ReportingPipeEntry<T>>;
+export interface ReportingPipeEntry<T> {
+  _id: string;
+  label?: string;
+  actions: Array<ReportingPipeAction<T>>;
+}

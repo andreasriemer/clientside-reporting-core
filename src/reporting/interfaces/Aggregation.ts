@@ -9,6 +9,7 @@ export type AggregationAction<T, V, R extends SimpleResult<V> | ListResult<V>> =
 ) => AggregationResult<T, V, R>;
 
 export type Aggregation<T, V> = {
+  _id: string;
   paths: Array<Array<string>>;
   action: AggregationAction<T, V, SimpleResult<V>>;
   label?: string;
@@ -16,6 +17,7 @@ export type Aggregation<T, V> = {
 };
 
 export type AggregationType = {
+  _id: string;
   label?: string;
   paths?: Array<Array<string>>;
   action?: AggregationActionType;

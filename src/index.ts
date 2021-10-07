@@ -13,7 +13,14 @@ import('./reporting/constants/workerOptions').then((workerOptions: { default: Wo
 const loadSourceValues = async <T extends Record<string, unknown>>(
   sources: Array<ReportingSource<T>>,
   config: Partial<ReportConfig>,
-) => {
+): Promise<{
+  sourceValues: Array<T>;
+  sourceData: Array<{
+    key: string;
+    label: string;
+    values: Array<T>;
+  }>;
+}> => {
   const sourceList = config.sources?.reduce((previous: Array<ReportingSource<T>>, { name }) => {
     const s = sources.find(({ key }) => key === name);
     if (s) {
@@ -23,7 +30,7 @@ const loadSourceValues = async <T extends Record<string, unknown>>(
   }, []);
   if (sourceList && sourceList.length) {
     const promise = sourceList.map(async (s) => ({
-      values: await s.dataCallback(),
+      values: await s.dataCallback(config.queryParams),
       ...s,
     }));
     if (promise) {
@@ -49,31 +56,61 @@ const loadSourceValues = async <T extends Record<string, unknown>>(
             config.sourcesFilter,
           ]);
           const combinedSources = await workerPool.exec('combineSources', [filteredSourcesValues, config]);
-          return await workerPool.exec('combinedSourceValueFilter', [combinedSources, config.sourcesFilter]);
+          return {
+            sourceValues: await workerPool.exec('combinedSourceValueFilter', [combinedSources, config.sourcesFilter]),
+            sourceData: ensuredValues,
+          };
         } catch (e) {
-          console.error(e);
-          return combinedSourceValueFilter<T>(
-            combineSources<T>(filterSourcesValues(ensuredValues, config.sourcesFilter), config),
-            config.sourcesFilter,
-          );
+          if (process.env.NODE_ENV === 'development') {
+            // tslint:disable-next-line: no-console
+            console.error(e);
+          }
+          return {
+            sourceValues: combinedSourceValueFilter<T>(
+              combineSources<T>(filterSourcesValues(ensuredValues, config.sourcesFilter), config),
+              config.sourcesFilter,
+            ),
+            sourceData: ensuredValues,
+          };
         }
       }
     }
   }
+  return {
+    sourceValues: [],
+    sourceData: [],
+  };
 };
 
 const getReport = async <T extends Record<string, unknown>>(
   sources: Array<ReportingSource<T>>,
   config: Partial<ReportConfig>,
-): Promise<ReportResult | undefined> => {
-  const sourceValues = await loadSourceValues(sources, config);
+): Promise<ReportResult<T> | undefined> => {
+  const { sourceValues, sourceData } = await loadSourceValues(sources, config);
   const mappedSources = sources.map(({ key, label }) => ({ key, label }));
   if (sourceValues && config.pipes?.length) {
     try {
-      return await workerPool.exec('generateReport', [sourceValues, config, mappedSources]);
+      const reportData = await workerPool.exec('generateReport', [sourceValues, config, mappedSources]);
+      if (reportData) {
+        return {
+          ...reportData,
+          sourceValues,
+          sourceData,
+        };
+      }
     } catch (e) {
-      console.error(e);
-      return generateReport(sourceValues, config, mappedSources);
+      if (process.env.NODE_ENV === 'development') {
+        // tslint:disable-next-line: no-console
+        console.error(e);
+      }
+      const reportData = await generateReport(sourceValues, config, mappedSources);
+      if (reportData) {
+        return {
+          ...reportData,
+          sourceValues,
+          sourceData,
+        };
+      }
     }
   }
   return undefined;
