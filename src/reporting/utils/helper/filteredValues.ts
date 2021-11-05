@@ -29,7 +29,7 @@ export const dateComparator =
     }
   };
 
-const filteredValues = <T extends Record<string, unknown>>(
+const filteredValues = <T extends object>(
   source: Array<T>,
   path: Array<string>,
   filterValue?: Array<string> | undefined,

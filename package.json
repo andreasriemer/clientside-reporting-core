@@ -1,5 +1,5 @@
 {
-  "name": "clientside-reporting-core",
+  "name": "@clientside-reporting/core",
   "version": "0.0.1",
   "description": "A clientside implementation for reports",
   "main": "lib/index.js",
@@ -14,7 +14,12 @@
     "preversion": "npm run lint",
     "version": "npm run format && git add -A src",
     "postversion": "git push && git push --tags",
+    "publishLib": "npm publish --access public",
     "link": "npm link"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andreasriemer/clientside-reporting-core.git"
   },
   "files": [
     "lib /**/*"
@@ -26,6 +31,10 @@
   ],
   "author": "Andreas Riemer",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/andreasriemer/clientside-reporting-core/issues"
+  },
+  "homepage": "https://github.com/andreasriemer/clientside-reporting-core#readme",
   "devDependencies": {
     "@types/jest": "^26.0.23",
     "@types/workerpool": "^6.1.0",

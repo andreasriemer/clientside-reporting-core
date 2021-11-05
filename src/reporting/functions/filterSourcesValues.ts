@@ -2,17 +2,17 @@ import { ReportSourceFilter } from '../interfaces/ReportConfig';
 import filteredListResultEntry from '../utils/helper/filteredListResultEntry';
 import filteredValues from '../utils/helper/filteredValues';
 
-const filterSourcesValues = (
+const filterSourcesValues = <T extends object>(
   sources: Array<{
     key: string;
     label: string;
-    values: Array<Record<string, unknown>>;
+    values: Array<T>;
   }>,
   sourcesFilter?: Array<ReportSourceFilter>,
 ) => {
   if (sourcesFilter && sourcesFilter.some(({ filterValue }) => !!filterValue?.length)) {
     return sources.map((source) => {
-      let filteredSourceValues: Array<Record<string, unknown>> = source.values;
+      let filteredSourceValues: Array<T> = source.values;
       const sourceFilters = sourcesFilter.filter(({ sources: sourcesFilterSources }) =>
         sourcesFilterSources?.some(({ name }) => name === source.key),
       );
@@ -27,7 +27,7 @@ const filterSourcesValues = (
                 sourceFilter.filterValue,
                 sourceFilterSource.comparator,
               ).map(
-                filteredListResultEntry<string, Record<string, unknown>>(
+                filteredListResultEntry<string, T>(
                   sourceFilter.filterValue,
                   sourceFilterSource.path,
                   sourceFilterSource.comparator,

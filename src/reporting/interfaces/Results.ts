@@ -10,19 +10,19 @@ export interface AggregationResult<T, V, R extends SimpleResult<V> | ListResult<
   result: R;
 }
 
-export interface ReportResultEntry<T extends Record<string, unknown>> {
+export interface ReportResultEntry<T extends object> {
   _id: string;
   label: string;
   source: Array<T>;
   result: Array<AggregationResult<T, number, SimpleResult<number>>>;
 }
 
-export interface ReportData<T extends Record<string, unknown>> {
+export interface ReportData<T extends object> {
   _id: string | undefined;
   label: string | undefined;
   results: Array<ReportResultEntry<T>>;
 }
-export interface ReportResult<T extends Record<string, unknown>> extends ReportData<T> {
+export interface ReportResult<T extends object> extends ReportData<T> {
   sourceValues: Array<T>;
   sourceData: Array<{
     key: string;

@@ -10,7 +10,7 @@ import('./reporting/constants/workerOptions').then((workerOptions: { default: Wo
   workerPool = pool(workerSrc, { ...workerPoolOptions });
 });
 
-const loadSourceValues = async <T extends Record<string, unknown>>(
+const loadSourceValues = async <T extends object>(
   sources: Array<ReportingSource<T>>,
   config: Partial<ReportConfig>,
 ): Promise<{
@@ -21,18 +21,31 @@ const loadSourceValues = async <T extends Record<string, unknown>>(
     values: Array<T>;
   }>;
 }> => {
-  const sourceList = config.sources?.reduce((previous: Array<ReportingSource<T>>, { name }) => {
-    const s = sources.find(({ key }) => key === name);
-    if (s) {
-      previous.push(s);
-    }
-    return previous;
-  }, []);
+  const sourceList = config.sources?.reduce(
+    (previous: Array<ReportingSource<T> & { valueMappingKey?: string }>, { name, valueMappingKey }) => {
+      const s = sources.find(({ key }) => key === name);
+      if (s) {
+        previous.push({
+          ...s,
+          valueMappingKey,
+        });
+      }
+      return previous;
+    },
+    [],
+  );
   if (sourceList && sourceList.length) {
-    const promise = sourceList.map(async (s) => ({
-      values: await s.dataCallback(config.queryParams),
-      ...s,
-    }));
+    const promise = sourceList.map(async (s) => {
+      const mapFun =
+        s.valueMappingKey && s.valueMapping && s.valueMapping[s.valueMappingKey]
+          ? s.valueMapping[s.valueMappingKey].map
+          : undefined;
+      const values = await s.dataCallback(config.queryParams);
+      return {
+        values: mapFun ? values?.map(mapFun) : values,
+        ...s,
+      };
+    });
     if (promise) {
       const sourceData = await Promise.all(promise);
       const ensuredValues: Array<{
@@ -82,7 +95,7 @@ const loadSourceValues = async <T extends Record<string, unknown>>(
   };
 };
 
-const getReport = async <T extends Record<string, unknown>>(
+const getReport = async <T extends object>(
   sources: Array<ReportingSource<T>>,
   config: Partial<ReportConfig>,
 ): Promise<ReportResult<T> | undefined> => {

@@ -4,7 +4,7 @@ import { ReportConfig } from './../interfaces/ReportConfig';
 import pipeFromConfig from './pipeFromConfig';
 import { aggregationPipe } from '../utils';
 
-const generateReport = async <T extends Record<string, unknown>>(
+const generateReport = async <T extends object>(
   sourcesValues: Array<T>,
   config: Partial<ReportConfig>,
   sources?: Array<Omit<ReportingSource<T>, 'dataCallback'>>,

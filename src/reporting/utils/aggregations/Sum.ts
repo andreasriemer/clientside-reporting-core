@@ -13,14 +13,16 @@ const sumAggregation =
       result: {
         label,
         value: [...source].reduce((previous: number, current, _, array) => {
-          if (isDuplicateValue(current, array, paths[0])) {
+          if (paths.every((path) => isDuplicateValue(current, array, path))) {
             return previous;
           }
-          const value = valueByPath<T | SimpleResult<T>, number>(current, paths[0]);
-          const valueList = Array.isArray(value) ? value : [value];
+          const values = paths.reduce((previousValues: Array<number>, path) => {
+            const value = valueByPath<T | SimpleResult<T>, number>(current, path);
+            return [...previousValues, ...(Array.isArray(value) ? value : [value])];
+          }, []);
           return (
             previous +
-            valueList.reduce((previousValue, currentValue) => {
+            values.reduce((previousValue, currentValue) => {
               return addValues(previousValue, currentValue);
             }, 0)
           );

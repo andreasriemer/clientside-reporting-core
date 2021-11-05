@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ListResult } from '../../interfaces/Results';
+import { ListResult, SimpleResult } from '../../interfaces/Results';
 import isDuplicateValue from '../helper/isDuplicateValue';
 import valueByPath from '../helper/valueByPath';
 
@@ -8,12 +8,16 @@ const countAggregation = <T>(source: Array<T> | ListResult<T>, paths: Array<Arra
     source,
     result: {
       label,
-      value: [...source].filter((v, _, array) => {
-        if (isDuplicateValue(v, array, paths[0])) {
-          return false;
+      value: [...source].reduce((previous: Array<unknown>, current: T | SimpleResult<T>, _, array) => {
+        if (paths.every((path) => isDuplicateValue(current, array, path))) {
+          return previous;
         }
-        return valueByPath(v, paths[0]) != null;
-      }).length,
+        const values = paths.reduce((previousValues, path) => {
+          const value = valueByPath(current, path);
+          return [...previousValues, ...(Array.isArray(value) ? value : [value])];
+        }, []);
+        return [...previous, ...values.filter((entry) => entry != null)];
+      }, []).length,
     },
   };
   return result;

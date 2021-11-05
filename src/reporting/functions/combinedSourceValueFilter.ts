@@ -1,7 +1,7 @@
 import { ReportSourceFilter } from '../interfaces/ReportConfig';
 import filteredValues from '../utils/helper/filteredValues';
 
-const combinedSourceValueFilter = <T extends Record<string, unknown>>(
+const combinedSourceValueFilter = <T extends object>(
   combinedSourceValues: Array<T>,
   sourcesFilter: Array<ReportSourceFilter> | undefined,
 ): Array<T> => {

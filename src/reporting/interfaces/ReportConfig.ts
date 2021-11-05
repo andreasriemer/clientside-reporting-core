@@ -1,3 +1,4 @@
+import { ReportingSource } from './ReportingSource';
 import { AggregationType } from './Aggregation';
 import { TransformationType } from './Transformation';
 
@@ -27,13 +28,18 @@ export interface ReportSourceFilter {
   filterLabel?: string;
 }
 
+export type ValueMappingKey = keyof ReportingSource<object>['valueMapping'] | string;
+
+export interface ReportingSourceConfig {
+  name: string;
+  valueMappingKey?: ValueMappingKey;
+  mappingPath?: { srcPath: Array<string>; dstPath: Array<string> };
+}
+
 export interface ReportConfig {
   _id: string;
   type: string;
-  sources: Array<{
-    name: string;
-    mappingPath?: { srcPath: Array<string>; dstPath: Array<string> };
-  }>;
+  sources: Array<ReportingSourceConfig>;
   label: string;
   pipes: Array<ReportPipeConfig>;
   valueMapping: Record<string, string>;
